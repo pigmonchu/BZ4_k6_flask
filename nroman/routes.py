@@ -1,5 +1,6 @@
 from nroman import app
 from utils.romannumber import RomanNumber
+from flask import jsonify
 
 @app.route("/")
 def index():
@@ -7,10 +8,15 @@ def index():
 
 @app.route('/toroman/<valor>')
 def to_roman(valor):
+    resp = {'correct': False}
+
     try:
         valor = int(valor)
-    except:
-        return 'Valor incorrecto'
+    except: 
+        resp['message']='Valor incorrecto'
+        return jsonify(resp)
 
     nr = RomanNumber(valor)
-    return str(nr)
+    resp['correct'] = True
+    resp['result'] = {'arabigo': valor, 'romano': str(nr)}
+    return jsonify(resp)
